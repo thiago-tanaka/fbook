@@ -10,16 +10,25 @@
 <body>
 <div class="container-login">
     <div>
-        <form class="form" id="login">
-            <span>welcome</span>
+        <form class="form" id="registration-form">
+            <span>Create your account!</span>
+            <div>
+                <input type="text" name="nome" id="nome" placeholder="nome" required>
+            </div>
+            <div>
+                <input type="text" name="nick" id="nick" placeholder="nick" required>
+            </div>
             <div>
                 <input type="text" name="email" id="email" placeholder="email" required>
             </div>
             <div>
                 <input type="password" name="password" id="password" placeholder="password" required>
             </div>
-            <a href="/create-account">Create an account</a>
-            <button type="submit" class="btn">Login</button>
+            <div>
+                <input type="password" name="confirm-password" id="confirm-password" placeholder="confirm password" required>
+            </div>
+            <a href="/login">go to login page</a>
+            <button type="submit" class="btn">Register</button>
         </form>
     </div>
 </div>
