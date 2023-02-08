@@ -6,7 +6,8 @@ import (
 )
 
 var mainPageRoute = Route{
-	URI:      "/home",
-	Method:   http.MethodGet,
-	Function: controllers.LoadHomePage,
+	URI:                    "/home",
+	Method:                 http.MethodGet,
+	Function:               controllers.LoadHomePage,
+	RequiresAuthentication: true,
 }
