@@ -42,7 +42,7 @@ func Read(r *http.Request) (map[string]string, error) {
 	}
 
 	value := make(map[string]string)
-	if err = s.Decode("cookie", cookie.Value, &value); err == nil {
+	if err = s.Decode("cookie", cookie.Value, &value); err != nil {
 		return nil, err
 	}
 
