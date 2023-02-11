@@ -1,8 +1,10 @@
-$('#post-form').on('submit', createPost);
-$('.like-post').on('click', likePost);
-$('#update-post').on('click', updatePost);
-$('.delete-post').on('click', deletePost);
-
+$(document).ready(function() {
+    $('#post-form').on('submit', createPost);
+    $(document).on('click', '.like-post', toggleLikeDislike);
+    $(document).on('click', '.dislike-post', toggleLikeDislike);
+    $('#update-post').on('click', updatePost);
+    $('.delete-post').on('click', deletePost);
+});
 
 function createPost(e) {
     e.preventDefault();
@@ -23,28 +25,45 @@ function createPost(e) {
     });
 }
 
-async function likePost(e) {
+async function toggleLikeDislike(e) {
     e.preventDefault();
 
-    const clickedElement = $(e.target);
-    const postId = clickedElement.closest('div').data('post-id');
+    const $clickedElement = $(e.target);
+    const postId = $clickedElement.closest('div').data('post-id');
+    const isLike = $clickedElement.hasClass('like-post');
+    const url = isLike ? '/posts/' + postId + '/like' : '/posts/' + postId + '/dislike';
+    const method = 'POST';
 
-    clickedElement.prop('disabled', true);
-    clickedElement.addClass('disabled');
+    $clickedElement.prop('disabled', true);
 
     $.ajax({
-        url: '/posts/' + postId + '/like',
-        method: 'POST',
+        url: url,
+        method: method,
         success: function(data) {
-            const likesCounter = clickedElement.next('span')
-            const likesCount = parseInt(likesCounter.text());
-            likesCounter.text(likesCount + 1);
+            const $likesCounter = $clickedElement.next('span');
+            let likesCount = parseInt($likesCounter.text());
+
+            if (isLike) {
+                likesCount++;
+                $clickedElement
+                    .removeClass('like-post')
+                    .addClass('dislike-post')
+                    .addClass('text-danger');
+            } else {
+                likesCount--;
+                $clickedElement
+                    .removeClass('dislike-post')
+                    .removeClass('text-danger')
+                    .addClass('like-post');
+            }
+
+            $likesCounter.text(likesCount);
         },
         error: function(err) {
-            console.log(err);
+            console.error(err);
         },
         complete: function() {
-            clickedElement.prop('disabled', false);
+            $clickedElement.prop('disabled', false);
         }
     });
 }

@@ -19,6 +19,12 @@ var postsRoutes = []Route{
 		RequiresAuthentication: true,
 	},
 	{
+		URI:                    "/posts/{postId}/dislike",
+		Method:                 http.MethodPost,
+		Function:               controllers.DislikePost,
+		RequiresAuthentication: true,
+	},
+	{
 		URI:                    "/posts/{postId}/edit",
 		Method:                 http.MethodGet,
 		Function:               controllers.LoadPostEditPage,
