@@ -72,3 +72,28 @@ func LikePost(w http.ResponseWriter, r *http.Request) {
 
 	responses.JSON(w, response.StatusCode, nil)
 }
+
+func DeletePost(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	postID, err := strconv.ParseUint(params["postId"], 10, 64)
+
+	url := fmt.Sprintf("%s/posts/%d", config.APIURL, postID)
+
+	response, err := requests.MakeRequestWithAuth(r, http.MethodDelete, url, nil)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ApiError{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.HandleError(w, response)
+		return
+	}
+
+	responses.JSON(w, response.StatusCode, nil)
+}

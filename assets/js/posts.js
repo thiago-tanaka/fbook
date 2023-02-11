@@ -1,6 +1,7 @@
 $('#post-form').on('submit', createPost);
 $('.like-post').on('click', likePost);
 $('#update-post').on('click', updatePost);
+$('.delete-post').on('click', deletePost);
 
 
 function createPost(e) {
@@ -68,6 +69,26 @@ function updatePost(e) {
         },
         complete: function() {
             $('#update-post').prop('disabled', false);
+        }
+    });
+}
+
+function deletePost(e) {
+    $(this).prop('disabled', true);
+
+    const postId = $(this).data('post-id');
+
+    $.ajax({
+        url: '/posts/' + postId,
+        method: 'DELETE',
+        success: function(data) {
+            window.location = '/home'
+        },
+        error: function(err) {
+            console.log(err);
+        },
+        complete: function() {
+            $('#delete-post').prop('disabled', false);
         }
     });
 }
