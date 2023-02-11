@@ -1,5 +1,6 @@
 $('#post-form').on('submit', createPost);
 $('.like-post').on('click', likePost);
+$('#update-post').on('click', updatePost);
 
 
 function createPost(e) {
@@ -43,6 +44,30 @@ async function likePost(e) {
         },
         complete: function() {
             clickedElement.prop('disabled', false);
+        }
+    });
+}
+
+function updatePost(e) {
+    $(this).prop('disabled', true);
+
+    const postId = $(this).data('post-id');
+
+    $.ajax({
+        url: '/posts/' + postId,
+        method: 'PUT',
+        data: {
+            title: $('#title').val(),
+            content: $('#content').val()
+        },
+        success: function(data) {
+            window.location = '/home'
+        },
+        error: function(err) {
+            console.log(err);
+        },
+        complete: function() {
+            $('#update-post').prop('disabled', false);
         }
     });
 }
