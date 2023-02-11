@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
 	"webapp/src/config"
@@ -39,8 +40,6 @@ func LoadHomePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(response.StatusCode)
-
 	var posts []models.Post
 
 	if err = json.NewDecoder(response.Body).Decode(&posts); err != nil {
@@ -60,4 +59,38 @@ func LoadHomePage(w http.ResponseWriter, r *http.Request) {
 		Posts:  posts,
 		UserID: userID,
 	})
+}
+
+func LoadPostEditPage(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	postID := params["postId"]
+
+	url := fmt.Sprintf("%s/posts/%s", config.APIURL, postID)
+
+	response, err := requests.MakeRequestWithAuth(r, http.MethodGet, url, nil)
+
+	if err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ApiError{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode >= 400 {
+		responses.HandleError(w, response)
+		return
+	}
+
+	var post models.Post
+
+	if err = json.NewDecoder(response.Body).Decode(&post); err != nil {
+		responses.JSON(w, http.StatusInternalServerError, responses.ApiError{
+			Message: err.Error(),
+		})
+		return
+	}
+
+	utils.ExecuteTemplate(w, "edit-post.html", post)
 }
