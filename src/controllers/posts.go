@@ -14,25 +14,10 @@ import (
 )
 
 func CreatePost(w http.ResponseWriter, r *http.Request) {
-	//post := struct {
-	//	Title   string `json:"title"`
-	//	Content string `json:"content"`
-	//}{
-	//	Title:   r.FormValue("title"),
-	//	Content: r.FormValue("content"),
-	//}
 	post, err := json.Marshal(map[string]string{
 		"title":   r.FormValue("title"),
 		"content": r.FormValue("content"),
 	})
-
-	//postJSON, err := json.Marshal(post)
-	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
-		responses.JSON(w, http.StatusBadRequest, responses.ApiError{
-			Message: err.Error(),
-		})
-		return
-	}
 
 	url := fmt.Sprintf("%s/posts", config.APIURL)
 	response, err := requests.MakeRequestWithAuth(r, http.MethodPost, url, bytes.NewBuffer(post))
