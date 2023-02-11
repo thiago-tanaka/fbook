@@ -1,14 +1,15 @@
 {{ define "likes" }}
-<span> {{ .Likes }} likes</span>
+<i class="fas fa-heart"></i>
+<span> {{ .Likes }}</span>
 {{ end }}
 
 {{ define "edit" }}
-<a href="/edit">Edit Post</a>
+<a href="/edit"><i class="fas fa-edit"></i></a>
 
 {{ end }}
 
 {{ define "delete" }}
-<a href="/delete">Delete Post</a>
+<a href="/delete"><i class="fas fa-trash text-danger"></i></a>
 {{ end }}
 
 {{ define "post-header" }}
