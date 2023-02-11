@@ -1,5 +1,5 @@
 {{ define "likes" }}
-<i class="fas fa-heart"></i>
+<i class="fas fa-heart like-post"></i>
 <span> {{ .Likes }}</span>
 {{ end }}
 
@@ -20,7 +20,7 @@
 {{ end }}
 
 {{ define "post-with-permission" }}
-    <div class="jumbotron" post-date-id="{{ .ID }}">
+    <div class="jumbotron" data-post-id="{{ .ID }}">
         {{ template "post-header" . }}
         <p>
             {{ template "likes" . }}
@@ -32,7 +32,7 @@
 {{ end }}
 
 {{ define "post-without-permission" }}
-<div class="jumbotron" post-date-id="{{ .ID }}">
+<div class="jumbotron" data-post-id="{{ .ID }}">
     {{ template "post-header" . }}
     <p>
         {{ template "likes" . }}
