@@ -5,7 +5,11 @@ function createUsers(event) {
     const password = $('#password').val();
 
     if(password !== $('#confirm-password').val()) {
-        alert('Passwords do not match');
+        Swal.fire({
+            title: 'Error!',
+            text: 'Passwords do not match!',
+            icon: 'error',
+        })
         return;
     }
 
@@ -21,10 +25,38 @@ function createUsers(event) {
         type: 'POST',
         data: user,
         success: function (data) {
-            console.log('success');
+            Swal.fire({
+                title: 'Success!',
+                text: 'User created successfully!',
+                icon: 'success',
+            }).then(() => {
+                $.ajax({
+                    url: '/login',
+                    type: 'POST',
+                    data: {
+                        email: $('#email').val(),
+                        password: $('#password').val()
+                    },
+                    success: function (data) {
+                        window.location.href = '/home';
+                    },
+                    error: function (err) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'User could not be created!',
+                            icon: 'error',
+                        })
+                    }
+                })
+
+            })
         },
         error: function (err) {
-            console.log(err);
+            Swal.fire({
+                title: 'Error!',
+                text: 'User could not be created!',
+                icon: 'error',
+            })
         }
     });
 }

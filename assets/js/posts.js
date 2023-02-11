@@ -20,7 +20,11 @@ function createPost(e) {
             window.location = '/home'
         },
         error: function(err) {
-            console.log(err);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Post could not be created',
+                icon: 'error',
+            })
         }
     });
 }
@@ -60,7 +64,11 @@ async function toggleLikeDislike(e) {
             $likesCounter.text(likesCount);
         },
         error: function(err) {
-            console.error(err);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Post could not be updated',
+                icon: 'error',
+            })
         },
         complete: function() {
             $clickedElement.prop('disabled', false);
@@ -81,10 +89,21 @@ function updatePost(e) {
             content: $('#content').val()
         },
         success: function(data) {
-            window.location = '/home'
+            Swal.fire({
+                title: 'Successo!',
+                text: "Post Updated Successfully!",
+                icon: 'success',
+            }).then(() => {
+                window.location = '/home'
+            })
+            // window.location = '/home'
         },
         error: function(err) {
-            console.log(err);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Post could not be updated',
+                icon: 'error',
+            })
         },
         complete: function() {
             $('#update-post').prop('disabled', false);
@@ -95,19 +114,36 @@ function updatePost(e) {
 function deletePost(e) {
     $(this).prop('disabled', true);
 
-    const postId = $(this).data('post-id');
-
-    $.ajax({
-        url: '/posts/' + postId,
-        method: 'DELETE',
-        success: function(data) {
-            window.location = '/home'
-        },
-        error: function(err) {
-            console.log(err);
-        },
-        complete: function() {
-            $('#delete-post').prop('disabled', false);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+    }).then((confirmation) => {
+        if (!confirmation.value) {
+            return
         }
-    });
+
+        const postId = $(this).data('post-id');
+
+        $.ajax({
+            url: '/posts/' + postId,
+            method: 'DELETE',
+            success: function(data) {
+                window.location = '/home'
+            },
+            error: function(err) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Post could not be deleted',
+                    icon: 'error',
+                })
+            },
+            complete: function() {
+                $('#delete-post').prop('disabled', false);
+            }
+        });
+    })
+
+
 }
